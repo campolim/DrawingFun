@@ -9,6 +9,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.util.TypedValue;
 
 /**
  * Created by mcampoli on 10-Dec-16.
@@ -26,6 +29,8 @@ public class DrawingView extends View {
     private Canvas drawCanvas;
     //canvas bitmap
     private Bitmap canvasBitmap;
+    private float brushSize, lastBrushSize;
+    private boolean erase=false;
 
     public DrawingView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -33,6 +38,9 @@ public class DrawingView extends View {
     }
 
     private void setupDrawing(){
+        brushSize = getResources().getInteger(R.integer.medium_size);
+        lastBrushSize = brushSize;
+
         //get drawing area setup for interaction
         drawPath = new Path();
         drawPaint = new Paint();
@@ -40,7 +48,7 @@ public class DrawingView extends View {
 
         // Initial path properties
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth(20);
+        drawPaint.setStrokeWidth(brushSize);
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -94,6 +102,35 @@ public class DrawingView extends View {
         invalidate();
         paintColor = Color.parseColor(newColor);
         drawPaint.setColor(paintColor);
+    }
+
+    public void setBrushSize(float newSize){
+        //update size
+        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                newSize, getResources().getDisplayMetrics());
+        brushSize=pixelAmount;
+        drawPaint.setStrokeWidth(brushSize);
+    }
+
+    public void setLastBrushSize(float lastSize){
+        lastBrushSize=lastSize;
+    }
+
+    public float getLastBrushSize(){
+        return lastBrushSize;
+    }
+
+    public void setErase(boolean isErase){
+        //set erase true or false
+        erase=isErase;
+
+        if(erase) drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        else drawPaint.setXfermode(null);
+    }
+
+    public void startNew(){
+        drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        invalidate();
     }
 
 }
