@@ -69,7 +69,12 @@ public class DrawingView extends View {
     protected void onDraw(Canvas canvas) {
         //draw view
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-        canvas.drawPath(drawPath, drawPaint);
+        //canvas.drawPath(drawPath, drawPaint);
+        if (!erase) {
+            canvas.drawPath(drawPath, drawPaint);
+        } else {
+            drawCanvas.drawPath(drawPath, drawPaint);
+        }
     }
 
     @Override
