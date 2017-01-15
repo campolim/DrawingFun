@@ -10,6 +10,7 @@ Jan 09: Fixed black line that displayed while erasing
 Improvements to be made:
   - Dialog titles do not display
   - ~~Fix black line that is displayed first while erasing~~
-  - Test storage permissions on actual device
+  - ~~Test storage permissions on actual device~~
+  - Fix storage permissions prompt
   - Fix apparently deprecated methods
   
