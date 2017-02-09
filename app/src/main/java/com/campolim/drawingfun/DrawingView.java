@@ -22,7 +22,7 @@ public class DrawingView extends View {
     //drawing path
     private Path drawPath;
     //drawing painted path and canvas fill
-    private Paint drawPaint, canvasPaint;
+    private Paint drawPaint, canvasPaint, refogPaint;
     //initial color
     private int paintColor = 0xFF660000;
     //canvas
@@ -31,6 +31,10 @@ public class DrawingView extends View {
     private Bitmap canvasBitmap;
     private float brushSize, lastBrushSize;
     private boolean erase=false;
+
+    public DrawingView(Context context){
+        super(context);
+    }
 
     public DrawingView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -54,6 +58,8 @@ public class DrawingView extends View {
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
+        refogPaint = new Paint(Paint.DITHER_FLAG);
+
     }
 
     @Override
@@ -68,14 +74,17 @@ public class DrawingView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         //draw view
-        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
+        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint); // This allows the new drawing to STAY on the canvas bitmap
         //canvas.drawPath(drawPath, drawPaint);
         if (!erase) {
             canvas.drawPath(drawPath, drawPaint);
+
         } else {
             drawCanvas.drawPath(drawPath, drawPaint);
         }
+
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -135,6 +144,14 @@ public class DrawingView extends View {
 
     public void startNew(){
         drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        invalidate();
+    }
+
+    public void refog() {
+        //drawCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.MULTIPLY);
+        refogPaint.setAlpha(200);
+        drawCanvas.drawColor(refogPaint.getColor(), PorterDuff.Mode.MULTIPLY);
+
         invalidate();
     }
 

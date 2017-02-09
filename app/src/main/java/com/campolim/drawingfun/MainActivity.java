@@ -1,5 +1,6 @@
 package com.campolim.drawingfun;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -51,6 +52,26 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         // Save drawing
         saveBtn = (ImageButton)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
+
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                try{
+                    drawView.refog();
+                }
+                catch (Exception e) {
+                    System.err.println("Error refogging!");
+                }
+                finally{
+                    //also call the same runnable to call it at regular interval
+                    handler.postDelayed(this, 250);
+                }
+            }
+        };
+
+        runnable.run();
     }
 
     public void paintClicked(View view){
@@ -62,12 +83,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             //update color
             ImageButton imgView = (ImageButton)view;
             String color = view.getTag().toString();
+            System.out.println(color);
             drawView.setColor(color);
 
             imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
             currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
             currPaint=(ImageButton)view;
         }
+
+        drawView.refog();
     }
 
     @Override
