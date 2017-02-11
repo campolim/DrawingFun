@@ -7,6 +7,8 @@ Users can draw on a white canvas using 10 different brush colours and 3 differen
 As baby steps towards a new app, the paths that users draw slowly fade away.
 
 ##### Release Notes & Future Improvements:
+Feb 10: Fixed deprecated methods
+
 Feb 08: Basic 'refogging' functionality implemented
 
 Jan 09: Fixed black line that displayed while erasing
@@ -16,6 +18,6 @@ Improvements to be made:
   - ~~Fix black line that is displayed first while erasing~~
   - ~~Test storage permissions on actual device~~
   - Fix storage permissions prompt
-  - Fix apparently deprecated methods
+  - ~~Fix apparently deprecated methods~~
   - Fix refog alpha v. opacity issue, where the lines are never completely erased
   

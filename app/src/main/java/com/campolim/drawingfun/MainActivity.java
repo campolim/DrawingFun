@@ -1,6 +1,7 @@
 package com.campolim.drawingfun;
 
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
         currPaint = (ImageButton)paintLayout.getChildAt(0);
-        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        currPaint.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.paint_pressed, null));
 
         // Brush size
         smallBrush = getResources().getInteger(R.integer.small_size);
@@ -86,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             System.out.println(color);
             drawView.setColor(color);
 
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            imgView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.paint_pressed, null));
+            currPaint.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.paint, null));
             currPaint=(ImageButton)view;
         }
 
