@@ -7,6 +7,8 @@ Users can draw on a white canvas using 10 different brush colours and 3 differen
 As baby steps towards a new app, the paths that users draw slowly fade away.
 
 ##### Release Notes & Future Improvements:
+Jul 08: Fixed permissions prompting to comply with newer versions of Android
+
 Jul 07: Fixed dialog box bug
 
 Feb 10: Fixed deprecated methods
@@ -19,7 +21,8 @@ Improvements to be made:
   - ~~Dialog box titles do not display~~
   - ~~Fix black line that is displayed first while erasing~~
   - ~~Test storage permissions on actual device~~
-  - Fix storage permissions prompt
+  - ~~Fix storage permissions prompt~~
   - ~~Fix apparently deprecated methods~~
   - Fix refog alpha v. opacity issue, where the lines are never completely erased
+  - Change image store location
   

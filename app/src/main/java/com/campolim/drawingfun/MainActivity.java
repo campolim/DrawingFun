@@ -1,6 +1,10 @@
 package com.campolim.drawingfun;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private DrawingView drawView;
     private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
     private float smallBrush, mediumBrush, largeBrush;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     System.err.println("Error refogging!");
                 }
                 finally{
-                    //also call the same runnable to call it at regular interval
+                    // Also call the same runnable to call it at regular interval
                     handler.postDelayed(this, 250);
                 }
             }
@@ -80,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         drawView.setErase(false);
         drawView.setBrushSize(drawView.getLastBrushSize());
 
-        //use chosen color
+        // Use chosen color
         if(view!=currPaint){
-            //update color
+            // Update color
             ImageButton imgView = (ImageButton)view;
             String color = view.getTag().toString();
             System.out.println(color);
@@ -96,11 +101,32 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         drawView.refog();
     }
 
+    /* Method to save the current bitmap to the device gallery */
+    public void saveDrawing() {
+        drawView.setDrawingCacheEnabled(true);
+        String imgSaved = MediaStore.Images.Media.insertImage(
+            getContentResolver(), drawView.getDrawingCache(),
+            UUID.randomUUID().toString()+".png", "drawing");
+
+        if(imgSaved!=null){
+            Toast savedToast = Toast.makeText(getApplicationContext(),
+                    "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+            savedToast.show();
+        }
+        else{
+            Toast unsavedToast = Toast.makeText(getApplicationContext(),
+                    "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+            unsavedToast.show();
+        }
+
+        drawView.destroyDrawingCache();
+    }
+
     @Override
     public void onClick(View view){
-        //respond to clicks
+        // Respond to clicks
         if(view.getId()==R.id.draw_btn){
-            //draw button clicked
+            // Draw button clicked
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Brush Size:");
@@ -144,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             });
 
         } else if(view.getId()==R.id.erase_btn){
-            //switch to erase - choose size
+            // Switch to erase - choose size
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Eraser Size:");
@@ -183,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             });
 
         } else if(view.getId()==R.id.new_btn){
-            //new button
+            // 'New' button
             AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
             newDialog.setTitle("New drawing");
             newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
@@ -200,30 +226,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             });
             newDialog.show();
         } else if(view.getId()==R.id.save_btn){
-            //save drawing
+            // Save drawing
             AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
             saveDialog.setTitle("Save drawing");
             saveDialog.setMessage("Save drawing to device Gallery?");
             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface dialog, int which){
-                    //save drawing
-                    drawView.setDrawingCacheEnabled(true);
-                    String imgSaved = MediaStore.Images.Media.insertImage(
-                            getContentResolver(), drawView.getDrawingCache(),
-                            UUID.randomUUID().toString()+".png", "drawing");
 
-                    if(imgSaved!=null){
-                        Toast savedToast = Toast.makeText(getApplicationContext(),
-                                "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-                        savedToast.show();
-                    }
-                    else{
-                        Toast unsavedToast = Toast.makeText(getApplicationContext(),
-                                "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-                        unsavedToast.show();
-                    }
+                    // First check for permissions
+                    if (ContextCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                    drawView.destroyDrawingCache();
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                    } else {
+                        saveDrawing();
+                    }
                 }
             });
             saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
@@ -234,4 +254,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             saveDialog.show();
         }
     }
+
+    /* Handle what to do after permissions are requested */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted
+                    saveDrawing();
+                } else {
+                    // Permission denied
+                    Toast permissionDeniedToast = Toast.makeText(getApplicationContext(),
+                            "Image save cancelled", Toast.LENGTH_SHORT);
+                    permissionDeniedToast.show();
+                }
+                return;
+            }
+        }
+    }
+
 }
