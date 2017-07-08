@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mediumBrush = getResources().getInteger(R.integer.medium_size);
         largeBrush = getResources().getInteger(R.integer.large_size);
 
+        // Brush button
         drawBtn = (ImageButton)findViewById(R.id.draw_btn);
         drawBtn.setOnClickListener(this);
 
@@ -100,9 +101,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         //respond to clicks
         if(view.getId()==R.id.draw_btn){
             //draw button clicked
-            final Dialog brushDialog = new Dialog(this); // Create a dialog, set the title
-            brushDialog.setTitle("Brush Size:");
-            brushDialog.setContentView(R.layout.brush_chooser);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Brush Size:");
+            builder.setView(R.layout.brush_chooser);
+
+            final AlertDialog brushDialog = builder.create();
+
+            brushDialog.show();
 
             ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
             smallBtn.setOnClickListener(new OnClickListener(){
@@ -137,13 +143,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 }
             });
 
-            brushDialog.show();
-
         } else if(view.getId()==R.id.erase_btn){
             //switch to erase - choose size
-            final Dialog brushDialog = new Dialog(this);
-            brushDialog.setTitle("Eraser size:");
-            brushDialog.setContentView(R.layout.brush_chooser);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Eraser Size:");
+            builder.setView(R.layout.brush_chooser);
+
+            final AlertDialog brushDialog = builder.create();
+
+            brushDialog.show();
 
             ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
             smallBtn.setOnClickListener(new OnClickListener(){
@@ -173,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 }
             });
 
-            brushDialog.show();
         } else if(view.getId()==R.id.new_btn){
             //new button
             AlertDialog.Builder newDialog = new AlertDialog.Builder(this);

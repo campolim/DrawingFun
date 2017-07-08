@@ -7,6 +7,8 @@ Users can draw on a white canvas using 10 different brush colours and 3 differen
 As baby steps towards a new app, the paths that users draw slowly fade away.
 
 ##### Release Notes & Future Improvements:
+Jul 07: Fixed dialog box bug
+
 Feb 10: Fixed deprecated methods
 
 Feb 08: Basic 'refogging' functionality implemented
@@ -14,7 +16,7 @@ Feb 08: Basic 'refogging' functionality implemented
 Jan 09: Fixed black line that displayed while erasing
 
 Improvements to be made:
-  - Dialog titles do not display
+  - ~~Dialog box titles do not display~~
   - ~~Fix black line that is displayed first while erasing~~
   - ~~Test storage permissions on actual device~~
   - Fix storage permissions prompt
