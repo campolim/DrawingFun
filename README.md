@@ -27,3 +27,4 @@ Improvements to be made:
   - ~~Fix apparently deprecated methods~~
   - ~~Change image store location~~
   - Remove future app features and restore to core 'Drawing Fun' functionality
+  - Change the app icon
