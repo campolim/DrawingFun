@@ -4,9 +4,11 @@ This app is an Android learning experience primarily for my own personal develop
 
 Users can draw on a white canvas using 10 different brush colours and 3 different brush sizes. They can also erase using 3 different brush sizes. Users can create a new canvas, and save their creations to their gallery.
 
-As baby steps towards a new app, the paths that users draw slowly fade away.
+As baby steps towards a new app, the paths that users draw slowly fade away. This functionality will soon be removed so that Drawing Fun is a standalone app.
 
 ##### Release Notes & Future Improvements:
+Jul 25: Modified the 'save' functionality so that the image saves to a 'Drawing Fun' folder
+
 Jul 08: Fixed permissions prompting to comply with newer versions of Android
 
 Jul 07: Fixed dialog box bug
@@ -23,6 +25,5 @@ Improvements to be made:
   - ~~Test storage permissions on actual device~~
   - ~~Fix storage permissions prompt~~
   - ~~Fix apparently deprecated methods~~
-  - Fix refog alpha v. opacity issue, where the lines are never completely erased
-  - Change image store location
-  
+  - ~~Change image store location~~
+  - Remove future app features and restore to core 'Drawing Fun' functionality

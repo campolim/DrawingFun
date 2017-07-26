@@ -1,16 +1,28 @@
 package com.campolim.drawingfun;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import android.provider.MediaStore;
 import android.app.AlertDialog;
@@ -101,23 +113,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         drawView.refog();
     }
 
-    /* Method to save the current bitmap to the device gallery */
+    /* Save the current bitmap to the device gallery */
     public void saveDrawing() {
         drawView.setDrawingCacheEnabled(true);
-        String imgSaved = MediaStore.Images.Media.insertImage(
-            getContentResolver(), drawView.getDrawingCache(),
-            UUID.randomUUID().toString()+".png", "drawing");
 
-        if(imgSaved!=null){
+        File storedImagePath = generateImagePath("DrawingFun", "png");
+        if (compressAndSaveImage(storedImagePath, drawView.getDrawingCache())) {
             Toast savedToast = Toast.makeText(getApplicationContext(),
                     "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
             savedToast.show();
-        }
-        else{
+        } else {
             Toast unsavedToast = Toast.makeText(getApplicationContext(),
                     "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
             unsavedToast.show();
+            System.err.println("Didn't save!");
         }
+        Uri url = addImageToGallery(getContentResolver(), "png", storedImagePath);
 
         drawView.destroyDrawingCache();
     }
@@ -272,6 +283,46 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 return;
             }
         }
+    }
+
+    private static File getImagesDirectory() {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "DrawingFun");
+        if (!file.mkdirs() && !file.isDirectory()) {
+            System.err.println("Directory could not be created");
+        }
+        return file;
+    }
+
+    private static File generateImagePath(String title, String imgType) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-hhmmss");
+        return new File(getImagesDirectory(), title + "_" + sdf.format(new Date()) + "." + imgType);
+    }
+
+    private boolean compressAndSaveImage(File file, Bitmap bitmap) {
+        boolean result = false;
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            if (result = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)) {
+                System.out.println("Compression success");
+            }
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private Uri addImageToGallery(ContentResolver cr, String imgType, File filepath) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "image-drawingfun");
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "drawingfun");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/" + imgType);
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.DATA, filepath.toString());
+
+        return cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
 }
