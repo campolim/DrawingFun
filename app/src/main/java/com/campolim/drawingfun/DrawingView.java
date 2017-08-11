@@ -22,7 +22,7 @@ public class DrawingView extends View {
     //drawing path
     private Path drawPath;
     //drawing painted path and canvas fill
-    private Paint drawPaint, canvasPaint, refogPaint;
+    private Paint drawPaint, canvasPaint;
     //initial color
     private int paintColor = 0xFF660000;
     //canvas
@@ -58,7 +58,6 @@ public class DrawingView extends View {
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
-        refogPaint = new Paint(Paint.DITHER_FLAG);
 
     }
 
@@ -144,14 +143,6 @@ public class DrawingView extends View {
 
     public void startNew(){
         drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-        invalidate();
-    }
-
-    public void refog() {
-        //drawCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.MULTIPLY);
-        refogPaint.setAlpha(200);
-        drawCanvas.drawColor(refogPaint.getColor(), PorterDuff.Mode.MULTIPLY);
-
         invalidate();
     }
 

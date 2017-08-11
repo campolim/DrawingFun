@@ -7,26 +7,21 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 import android.provider.MediaStore;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -71,26 +66,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         // Save drawing
         saveBtn = (ImageButton)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
-
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-
-            @Override
-            public void run() {
-                try{
-                    drawView.refog();
-                }
-                catch (Exception e) {
-                    System.err.println("Error refogging!");
-                }
-                finally{
-                    // Also call the same runnable to call it at regular interval
-                    handler.postDelayed(this, 250);
-                }
-            }
-        };
-
-        runnable.run();
     }
 
     public void paintClicked(View view){
@@ -109,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             currPaint.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.paint, null));
             currPaint=(ImageButton)view;
         }
-
-        drawView.refog();
     }
 
     /* Save the current bitmap to the device gallery */
@@ -277,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 } else {
                     // Permission denied
                     Toast permissionDeniedToast = Toast.makeText(getApplicationContext(),
-                            "Image save cancelled", Toast.LENGTH_SHORT);
+                            "Storage permissions denied", Toast.LENGTH_SHORT);
                     permissionDeniedToast.show();
                 }
                 return;
