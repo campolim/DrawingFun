@@ -7,6 +7,8 @@ Users can draw on a white canvas using 10 different brush colours and 3 differen
 As baby steps towards a new app, the paths that users draw slowly fade away. This functionality will soon be removed so that Drawing Fun is a standalone app.
 
 ##### Release Notes & Future Improvements:
+Aug 11: Removed the 'refogging' functionality, so that the app is solely 'Drawing Fun'!
+
 Jul 25: Modified the 'save' functionality so that the image saves to a 'Drawing Fun' folder
 
 Jul 08: Fixed permissions prompting to comply with newer versions of Android
@@ -26,5 +28,5 @@ Improvements to be made:
   - ~~Fix storage permissions prompt~~
   - ~~Fix apparently deprecated methods~~
   - ~~Change image store location~~
-  - Remove future app features and restore to core 'Drawing Fun' functionality
+  - ~~Remove future app features and restore to core 'Drawing Fun' functionality~~
   - Change the app icon
